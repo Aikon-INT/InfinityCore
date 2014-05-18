@@ -372,9 +372,6 @@ void Player::UpdateAttackPowerAndDamage(bool ranged)
             case CLASS_PALADIN:
                 val2 = level * 3.0f + GetStat(STAT_STRENGTH) * 2.0f - 20.0f;
                 break;
-            case CLASS_DEATH_KNIGHT:
-                val2 = level * 3.0f + GetStat(STAT_STRENGTH) * 2.0f - 20.0f;
-                break;
             case CLASS_ROGUE:
                 val2 = level * 2.0f + GetStat(STAT_STRENGTH) + GetStat(STAT_AGILITY) - 20.0f;
                 break;
@@ -901,27 +898,6 @@ void Player::UpdateManaRegen()
     SetStatFloatValue(UNIT_FIELD_POWER_REGEN_FLAT_MODIFIER, power_regen_mp5 + power_regen);
 }
 
-void Player::UpdateRuneRegen(RuneType rune)
-{
-    if (rune >= NUM_RUNE_TYPES)
-        return;
-
-    uint32 cooldown = 0;
-
-    for (uint32 i = 0; i < MAX_RUNES; ++i)
-        if (GetBaseRune(i) == rune)
-        {
-            cooldown = GetRuneBaseCooldown(i);
-            break;
-        }
-
-    if (cooldown <= 0)
-        return;
-
-    float regen = float(1 * IN_MILLISECONDS) / float(cooldown);
-    SetFloatValue(PLAYER_RUNE_REGEN_1 + uint8(rune), regen);
-}
-
 void Player::_ApplyAllStatBonuses()
 {
     SetCanModifyStats(false);
@@ -1110,28 +1086,7 @@ bool Guardian::UpdateStats(Stats stat)
     Unit* owner = GetOwner();
     // Handle Death Knight Glyphs and Talents
     float mod = 0.75f;
-    if (IsPetGhoul() && (stat == STAT_STAMINA || stat == STAT_STRENGTH))
-    {
-        if (stat == STAT_STAMINA)
-            mod = 0.3f; // Default Owner's Stamina scale
-        else
-            mod = 0.7f; // Default Owner's Strength scale
-
-        // Check just if owner has Ravenous Dead since it's effect is not an aura
-        AuraEffect const* aurEff = owner->GetAuraEffect(SPELL_AURA_MOD_TOTAL_STAT_PERCENTAGE, SPELLFAMILY_DEATHKNIGHT, 3010, 0);
-        if (aurEff)
-        {
-            SpellInfo const* spellInfo = aurEff->GetSpellInfo();                                                 // Then get the SpellProto and add the dummy effect value
-            AddPct(mod, spellInfo->Effects[EFFECT_1].CalcValue());                                              // Ravenous Dead edits the original scale
-        }
-        // Glyph of the Ghoul
-        aurEff = owner->GetAuraEffect(58686, 0);
-        if (aurEff)
-            mod += CalculatePct(1.0f, aurEff->GetAmount());                                                    // Glyph of the Ghoul adds a flat value to the scale mod
-        ownersBonus = float(owner->GetStat(stat)) * mod;
-        value += ownersBonus;
-    }
-    else if (stat == STAT_STAMINA)
+    if (stat == STAT_STAMINA)
     {
         if (owner->getClass() == CLASS_WARLOCK && IsPet())
         {

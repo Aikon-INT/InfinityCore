@@ -20,6 +20,7 @@
 
 namespace AuthHelper
 {
+// Newer revisions kept so other realms can share authserver.
     static RealmBuildInfo const PostBcAcceptedClientBuilds[] =
     {
         {15595, 4, 3, 4, ' '},
@@ -31,6 +32,7 @@ namespace AuthHelper
         {11403, 3, 3, 2, ' '},
         {11159, 3, 3, 0, 'a'},
         {10505, 3, 2, 2, 'a'},
+        {10146, 3, 1, 3, ' '),                                  // 3.1.3 China Mainland build
         {9947,  3, 1, 3, ' '},
         {8606,  2, 4, 3, ' '},
         {0,     0, 0, 0, ' '}                                   // terminator

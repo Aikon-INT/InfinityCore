@@ -387,7 +387,7 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recvData)
         SendPacket(&data);
         return;
     }
-
+/*
     if (class_ == CLASS_DEATH_KNIGHT && !HasPermission(rbac::RBAC_PERM_SKIP_CHECK_CHARACTER_CREATION_HEROIC_CHARACTER))
     {
         // speedup check for heroic class disabled case
@@ -408,7 +408,7 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket& recvData)
             return;
         }
     }
-
+*/
     delete _charCreateCallback.GetParam();  // Delete existing if any, to make the callback chain reset to stage 0
     _charCreateCallback.SetParam(new CharacterCreateInfo(name, race_, class_, gender, skin, face, hairStyle, hairColor, facialHair, outfitId, recvData));
     PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHECK_NAME);
@@ -502,11 +502,11 @@ void WorldSession::HandleCharCreateCallback(PreparedQueryResult result, Characte
 
             _charCreateCallback.FreeResult();
 
-            if (!allowTwoSideAccounts || skipCinematics == 1 || createInfo->Class == CLASS_DEATH_KNIGHT)
+            if (!allowTwoSideAccounts || skipCinematics == 1 /*|| createInfo->Class == CLASS_DEATH_KNIGHT*/)
             {
                 PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHAR_CREATE_INFO);
                 stmt->setUInt32(0, GetAccountId());
-                stmt->setUInt32(1, (skipCinematics == 1 || createInfo->Class == CLASS_DEATH_KNIGHT) ? 10 : 1);
+                stmt->setUInt32(1, (skipCinematics == 1 /*|| createInfo->Class == CLASS_DEATH_KNIGHT) ? 10 : 1*/);
                 _charCreateCallback.SetFutureResult(CharacterDatabase.AsyncQuery(stmt));
                 _charCreateCallback.NextStage();
                 return;
@@ -519,20 +519,20 @@ void WorldSession::HandleCharCreateCallback(PreparedQueryResult result, Characte
         case 3:
         {
             bool haveSameRace = false;
-            uint32 heroicReqLevel = sWorld->getIntConfig(CONFIG_CHARACTER_CREATING_MIN_LEVEL_FOR_HEROIC_CHARACTER);
-            bool hasHeroicReqLevel = (heroicReqLevel == 0);
+            //uint32 heroicReqLevel = sWorld->getIntConfig(CONFIG_CHARACTER_CREATING_MIN_LEVEL_FOR_HEROIC_CHARACTER);
+            //bool hasHeroicReqLevel = (heroicReqLevel == 0);
             bool allowTwoSideAccounts = !sWorld->IsPvPRealm() || HasPermission(rbac::RBAC_PERM_TWO_SIDE_CHARACTER_CREATION);
             uint32 skipCinematics = sWorld->getIntConfig(CONFIG_SKIP_CINEMATICS);
-            bool checkHeroicReqs = createInfo->Class == CLASS_DEATH_KNIGHT && !HasPermission(rbac::RBAC_PERM_SKIP_CHECK_CHARACTER_CREATION_HEROIC_CHARACTER);
+            //bool checkHeroicReqs = createInfo->Class == CLASS_DEATH_KNIGHT && !HasPermission(rbac::RBAC_PERM_SKIP_CHECK_CHARACTER_CREATION_HEROIC_CHARACTER);
 
             if (result)
             {
                 uint32 team = Player::TeamForRace(createInfo->Race);
-                uint32 freeHeroicSlots = sWorld->getIntConfig(CONFIG_HEROIC_CHARACTERS_PER_REALM);
+                //uint32 freeHeroicSlots = sWorld->getIntConfig(CONFIG_HEROIC_CHARACTERS_PER_REALM);
 
                 Field* field = result->Fetch();
                 uint8 accRace  = field[1].GetUInt8();
-
+/*
                 if (checkHeroicReqs)
                 {
                     uint8 accClass = field[2].GetUInt8();
@@ -558,7 +558,7 @@ void WorldSession::HandleCharCreateCallback(PreparedQueryResult result, Characte
                         if (accLevel >= heroicReqLevel)
                             hasHeroicReqLevel = true;
                     }
-                }
+                }*/
 
                 // need to check team only for first character
                 /// @todo what to if account already has characters of both races?
@@ -581,7 +581,7 @@ void WorldSession::HandleCharCreateCallback(PreparedQueryResult result, Characte
 
                 // search same race for cinematic or same class if need
                 /// @todo check if cinematic already shown? (already logged in?; cinematic field)
-                while ((skipCinematics == 1 && !haveSameRace) || createInfo->Class == CLASS_DEATH_KNIGHT)
+                while ((skipCinematics == 1 && !haveSameRace) /*|| createInfo->Class == CLASS_DEATH_KNIGHT*/)
                 {
                     if (!result->NextRow())
                         break;
@@ -591,7 +591,7 @@ void WorldSession::HandleCharCreateCallback(PreparedQueryResult result, Characte
 
                     if (!haveSameRace)
                         haveSameRace = createInfo->Race == accRace;
-
+/*
                     if (checkHeroicReqs)
                     {
                         uint8 acc_class = field[2].GetUInt8();
@@ -617,10 +617,10 @@ void WorldSession::HandleCharCreateCallback(PreparedQueryResult result, Characte
                             if (acc_level >= heroicReqLevel)
                                 hasHeroicReqLevel = true;
                         }
-                    }
+                    }*/
                 }
             }
-
+/*
             if (checkHeroicReqs && !hasHeroicReqLevel)
             {
                 WorldPacket data(SMSG_CHAR_CREATE, 1);
@@ -630,7 +630,7 @@ void WorldSession::HandleCharCreateCallback(PreparedQueryResult result, Characte
                 _charCreateCallback.Reset();
                 return;
             }
-
+*/
             if (createInfo->Data.rpos() < createInfo->Data.wpos())
             {
                 uint8 unk;
@@ -1878,29 +1878,14 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recvData)
                     numFullTaximasks = 11;
                 if (team == TEAM_ALLIANCE)
                 {
-                    if (playerClass != CLASS_DEATH_KNIGHT)
-                    {
-                        for (uint8 i = 0; i < numFullTaximasks; ++i)
-                            taximaskstream << uint32(sAllianceTaxiNodesMask[i]) << ' ';
-                    }
-                    else
-                    {
-                        for (uint8 i = 0; i < numFullTaximasks; ++i)
-                            taximaskstream << uint32(sAllianceTaxiNodesMask[i] | sDeathKnightTaxiNodesMask[i]) << ' ';
-                    }
+                    for (uint8 i = 0; i < numFullTaximasks; ++i)
+                        taximaskstream << uint32(sAllianceTaxiNodesMask[i]) << ' ';
+
                 }
                 else
                 {
-                    if (playerClass != CLASS_DEATH_KNIGHT)
-                    {
-                        for (uint8 i = 0; i < numFullTaximasks; ++i)
-                            taximaskstream << uint32(sHordeTaxiNodesMask[i]) << ' ';
-                    }
-                    else
-                    {
-                        for (uint8 i = 0; i < numFullTaximasks; ++i)
-                            taximaskstream << uint32(sHordeTaxiNodesMask[i] | sDeathKnightTaxiNodesMask[i]) << ' ';
-                    }
+                    for (uint8 i = 0; i < numFullTaximasks; ++i)
+                        taximaskstream << uint32(sHordeTaxiNodesMask[i]) << ' ';
                 }
 
                 uint32 numEmptyTaximasks = 11 - numFullTaximasks;

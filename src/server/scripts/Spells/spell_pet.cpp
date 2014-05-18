@@ -16,7 +16,6 @@
  */
 
 /*
- * Scripts for spells with SPELLFAMILY_DEATHKNIGHT and SPELLFAMILY_GENERIC spells used by deathknight players.
  * Ordered alphabetically using scriptname.
  * Scriptnames of files in this file should be prefixed with "spell_dk_".
  */
@@ -1495,15 +1494,6 @@ public:
                     if (Unit* owner = pet->GetOwner())
                     {
                         float mod = 0.3f;
-
-                        // Ravenous Dead. Check just if owner has Ravenous Dead since it's effect is not an aura
-                        if (AuraEffect const* aurEff = owner->GetAuraEffect(SPELL_AURA_MOD_TOTAL_STAT_PERCENTAGE, SPELLFAMILY_DEATHKNIGHT, 3010, 0))
-                            mod += aurEff->GetSpellInfo()->Effects[EFFECT_1].CalcValue()/100;                   // Ravenous Dead edits the original scale
-
-                        // Glyph of the Ghoul
-                        if (AuraEffect const* aurEff = owner->GetAuraEffect(SPELL_DEATH_KNIGHT_GLYPH_OF_GHOUL, 0))
-                            mod += aurEff->GetAmount()/100;
-
                         float ownerBonus = float(owner->GetStat(STAT_STAMINA)) * mod;
                         amount += ownerBonus;
                     }
@@ -1540,15 +1530,6 @@ public:
                 // Ravenous Dead
                 AuraEffect const* aurEff = NULL;
                 // Check just if owner has Ravenous Dead since it's effect is not an aura
-                aurEff = owner->GetAuraEffect(SPELL_AURA_MOD_TOTAL_STAT_PERCENTAGE, SPELLFAMILY_DEATHKNIGHT, 3010, 0);
-                if (aurEff)
-                {
-                    mod += CalculatePct(mod, aurEff->GetSpellInfo()->Effects[EFFECT_1].CalcValue());                   // Ravenous Dead edits the original scale
-                }
-                // Glyph of the Ghoul
-                aurEff = owner->GetAuraEffect(58686, 0);
-                if (aurEff)
-                    mod += CalculatePct(1.0f, aurEff->GetAmount());                                                    // Glyph of the Ghoul adds a flat value to the scale mod
                 float ownerBonus = float(owner->GetStat(STAT_STRENGTH)) * mod;
                 amount += ownerBonus;
             }

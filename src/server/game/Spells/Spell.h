@@ -60,7 +60,6 @@ enum SpellCastFlags
     CAST_FLAG_UNKNOWN_19         = 0x00040000,
     CAST_FLAG_VISUAL_CHAIN       = 0x00080000,
     CAST_FLAG_UNKNOWN_21         = 0x00100000,
-    CAST_FLAG_RUNE_LIST          = 0x00200000,
     CAST_FLAG_UNKNOWN_23         = 0x00400000,
     CAST_FLAG_UNKNOWN_24         = 0x00800000,
     CAST_FLAG_UNKNOWN_25         = 0x01000000,
@@ -331,7 +330,6 @@ class Spell
         void EffectGameObjectDamage(SpellEffIndex effIndex);
         void EffectGameObjectRepair(SpellEffIndex effIndex);
         void EffectGameObjectSetDestructionState(SpellEffIndex effIndex);
-        void EffectActivateRune(SpellEffIndex effIndex);
         void EffectCreateTamedPet(SpellEffIndex effIndex);
         void EffectDiscoverTaxi(SpellEffIndex effIndex);
         void EffectTitanGrip(SpellEffIndex effIndex);
@@ -385,7 +383,6 @@ class Spell
         void TakePower();
         void TakeAmmo();
 
-        void TakeRunePower(bool didHit);
         void TakeReagents();
         void TakeCastItem();
 
@@ -402,7 +399,6 @@ class Spell
         SpellCastResult CheckItems();
         SpellCastResult CheckRange(bool strict);
         SpellCastResult CheckPower();
-        SpellCastResult CheckRuneCost(uint32 runeCostID);
         SpellCastResult CheckCasterAuras() const;
 
         int32 CalculateDamage(uint8 i, Unit const* target) const { return m_caster->CalculateSpellDamage(target, m_spellInfo, i, &m_spellValue->EffectBasePoints[i]); }

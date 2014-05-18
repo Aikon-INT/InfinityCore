@@ -48,8 +48,7 @@ enum Expansions
 {
     EXPANSION_CLASSIC                  = 0,
     EXPANSION_THE_BURNING_CRUSADE      = 1,
-    EXPANSION_WRATH_OF_THE_LICH_KING   = 2,
-    MAX_EXPANSIONS                     = 3
+    MAX_EXPANSIONS                     = 2
 };
 
 enum Gender
@@ -110,7 +109,7 @@ enum Classes
     CLASS_HUNTER        = 3,
     CLASS_ROGUE         = 4,
     CLASS_PRIEST        = 5,
-    CLASS_DEATH_KNIGHT  = 6,
+    //CLASS_DEATH_KNIGHT  = 6,
     CLASS_SHAMAN        = 7,
     CLASS_MAGE          = 8,
     CLASS_WARLOCK       = 9,
@@ -124,8 +123,7 @@ enum Classes
 #define CLASSMASK_ALL_PLAYABLE \
     ((1<<(CLASS_WARRIOR-1))|(1<<(CLASS_PALADIN-1))|(1<<(CLASS_HUNTER-1))| \
     (1<<(CLASS_ROGUE-1))  |(1<<(CLASS_PRIEST-1)) |(1<<(CLASS_SHAMAN-1))| \
-    (1<<(CLASS_MAGE-1))   |(1<<(CLASS_WARLOCK-1))|(1<<(CLASS_DRUID-1)) | \
-    (1<<(CLASS_DEATH_KNIGHT-1)))
+    (1<<(CLASS_MAGE-1))   |(1<<(CLASS_WARLOCK-1))|(1<<(CLASS_DRUID-1)))
 
 // valid classes for creature_template.unit_class
 enum UnitClass
@@ -184,10 +182,9 @@ enum Powers
     POWER_FOCUS                         = 2,
     POWER_ENERGY                        = 3,
     POWER_HAPPINESS                     = 4,
-    POWER_RUNE                          = 5,
-    POWER_RUNIC_POWER                   = 6,
-    MAX_POWERS                          = 7,
-    POWER_ALL                           = 127,    // default for class?
+    MAX_POWERS                          = 5,
+    // Test me!
+    POWER_ALL                           = 62,    // default for class?
     POWER_HEALTH                        = 0xFFFFFFFE    // (-2 as signed value)
 };
 
@@ -813,26 +810,25 @@ enum SpellEffects
     SPELL_EFFECT_APPLY_AREA_AURA_OWNER              = 143,
     SPELL_EFFECT_KNOCK_BACK_DEST                    = 144,
     SPELL_EFFECT_PULL_TOWARDS_DEST                  = 145,
-    SPELL_EFFECT_ACTIVATE_RUNE                      = 146,
-    SPELL_EFFECT_QUEST_FAIL                         = 147,
-    SPELL_EFFECT_TRIGGER_MISSILE_SPELL_WITH_VALUE   = 148,
-    SPELL_EFFECT_CHARGE_DEST                        = 149,
-    SPELL_EFFECT_QUEST_START                        = 150,
-    SPELL_EFFECT_TRIGGER_SPELL_2                    = 151,
-    SPELL_EFFECT_SUMMON_RAF_FRIEND                  = 152,
-    SPELL_EFFECT_CREATE_TAMED_PET                   = 153,
-    SPELL_EFFECT_DISCOVER_TAXI                      = 154,
-    SPELL_EFFECT_TITAN_GRIP                         = 155,
-    SPELL_EFFECT_ENCHANT_ITEM_PRISMATIC             = 156,
-    SPELL_EFFECT_CREATE_ITEM_2                      = 157,
-    SPELL_EFFECT_MILLING                            = 158,
-    SPELL_EFFECT_ALLOW_RENAME_PET                   = 159,
-    SPELL_EFFECT_160                                = 160,
-    SPELL_EFFECT_TALENT_SPEC_COUNT                  = 161,
-    SPELL_EFFECT_TALENT_SPEC_SELECT                 = 162,
-    SPELL_EFFECT_163                                = 163,
-    SPELL_EFFECT_REMOVE_AURA                        = 164,
-    TOTAL_SPELL_EFFECTS                             = 165
+    SPELL_EFFECT_QUEST_FAIL                         = 146,
+    SPELL_EFFECT_TRIGGER_MISSILE_SPELL_WITH_VALUE   = 147,
+    SPELL_EFFECT_CHARGE_DEST                        = 148,
+    SPELL_EFFECT_QUEST_START                        = 149,
+    SPELL_EFFECT_TRIGGER_SPELL_2                    = 150,
+    SPELL_EFFECT_SUMMON_RAF_FRIEND                  = 151,
+    SPELL_EFFECT_CREATE_TAMED_PET                   = 152,
+    SPELL_EFFECT_DISCOVER_TAXI                      = 153,
+    SPELL_EFFECT_TITAN_GRIP                         = 154,
+    SPELL_EFFECT_ENCHANT_ITEM_PRISMATIC             = 155,
+    SPELL_EFFECT_CREATE_ITEM_2                      = 156,
+    SPELL_EFFECT_MILLING                            = 157,
+    SPELL_EFFECT_ALLOW_RENAME_PET                   = 158,
+    SPELL_EFFECT_160                                = 159,
+    SPELL_EFFECT_TALENT_SPEC_COUNT                  = 160,
+    SPELL_EFFECT_TALENT_SPEC_SELECT                 = 161,
+    SPELL_EFFECT_163                                = 162,
+    SPELL_EFFECT_REMOVE_AURA                        = 163,
+    TOTAL_SPELL_EFFECTS                             = 164
 };
 
 enum SpellCastResult
@@ -2707,7 +2703,6 @@ enum QuestSort
     QUEST_SORT_MIDSUMMER           = 369,
     QUEST_SORT_BREWFEST            = 370,
     QUEST_SORT_INSCRIPTION         = 371,
-    QUEST_SORT_DEATH_KNIGHT        = 372,
     QUEST_SORT_JEWELCRAFTING       = 373,
     QUEST_SORT_NOBLEGARDEN         = 374,
     QUEST_SORT_PILGRIMS_BOUNTY     = 375,
@@ -2727,7 +2722,6 @@ inline uint8 ClassByQuestSort(int32 QuestSort)
         case QUEST_SORT_HUNTER:         return CLASS_HUNTER;
         case QUEST_SORT_PRIEST:         return CLASS_PRIEST;
         case QUEST_SORT_DRUID:          return CLASS_DRUID;
-        case QUEST_SORT_DEATH_KNIGHT:   return CLASS_DEATH_KNIGHT;
     }
     return 0;
 }
@@ -3374,7 +3368,7 @@ enum SpellFamilyNames
     SPELLFAMILY_UNK2        = 12,                           // 2 spells (silence resistance)
     SPELLFAMILY_POTION      = 13,
     // 14 - unused
-    SPELLFAMILY_DEATHKNIGHT = 15,
+    // 15 - unused
     // 16 - unused
     SPELLFAMILY_PET         = 17
 };
