@@ -527,10 +527,6 @@ public:
                                 Talk(SAY_ROGUE);
                                 DoCast(me, SPELL_ROGUE);
                                 break;
-                            case CLASS_DEATH_KNIGHT:
-                                Talk(SAY_DEATH_KNIGHT);
-                                DoCast(me, SPELL_DEATH_KNIGHT);
-                                break;
                             default:
                                 break;
                         }

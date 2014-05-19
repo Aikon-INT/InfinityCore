@@ -859,8 +859,6 @@ Player::Player(WorldSession* session): Unit(true)
 
     m_isActive = true;
 
-    m_runes = NULL;
-
     m_lastFallTime = 0;
     m_lastFallZ = 0;
 
@@ -927,7 +925,6 @@ Player::~Player()
         delete ItemSetEff[x];
 
     delete m_declinedname;
-    delete m_runes;
     delete m_achievementMgr;
     delete m_reputationMgr;
 
@@ -3804,8 +3801,8 @@ bool Player::addSpell(uint32 spellId, bool active, bool learning, bool dependent
                 continue;
 
             if (_spell_idx->second->learnOnGetSkill == ABILITY_LEARNED_ON_GET_RACE_OR_CLASS_SKILL ||
-                // lockpicking/runeforging special case, not have ABILITY_LEARNED_ON_GET_RACE_OR_CLASS_SKILL
-                ((pSkill->id == SKILL_LOCKPICKING || pSkill->id == SKILL_RUNEFORGING) && _spell_idx->second->max_value == 0))
+                // lockpicking special case, not have ABILITY_LEARNED_ON_GET_RACE_OR_CLASS_SKILL
+                ((pSkill->id == SKILL_LOCKPICKING) && _spell_idx->second->max_value == 0))
             {
                 switch (GetSkillRangeType(pSkill, _spell_idx->second->racemask != 0))
                 {
@@ -4054,8 +4051,8 @@ void Player::removeSpell(uint32 spell_id, bool disabled, bool learn_low_rank)
 
             if ((_spell_idx->second->learnOnGetSkill == ABILITY_LEARNED_ON_GET_RACE_OR_CLASS_SKILL &&
                 pSkill->categoryId != SKILL_CATEGORY_CLASS) ||// not unlearn class skills (spellbook/talent pages)
-                // lockpicking/runeforging special case, not have ABILITY_LEARNED_ON_GET_RACE_OR_CLASS_SKILL
-                ((pSkill->id == SKILL_LOCKPICKING || pSkill->id == SKILL_RUNEFORGING) && _spell_idx->second->max_value == 0))
+                // lockpicking special case, not have ABILITY_LEARNED_ON_GET_RACE_OR_CLASS_SKILL
+                ((pSkill->id == SKILL_LOCKPICKING) && _spell_idx->second->max_value == 0))
             {
                 // not reset skills for professions and racial abilities
                 if ((pSkill->categoryId == SKILL_CATEGORY_SECONDARY || pSkill->categoryId == SKILL_CATEGORY_PROFESSION) &&
@@ -13740,7 +13737,7 @@ void Player::RemoveArenaEnchantments(EnchantmentSlot slot)
         {
             if (itr->item && itr->item->GetEnchantmentId(slot))
             {
-                // Poisons and DK runes are enchants which are allowed on arenas
+                // Poisons are enchants which are allowed on arenas
                 if (sSpellMgr->IsArenaAllowedEnchancment(itr->item->GetEnchantmentId(slot)))
                 {
                     ++next;
@@ -21270,6 +21267,7 @@ bool Player::ActivateTaxiPathTo(std::vector<uint32> const& nodes, Creature* npc 
     // get mount model (in case non taximaster (npc == NULL) allow more wide lookup)
     //
     // in spell case allow 0 model
+    uint32 mount_display_id = sObjectMgr->GetTaxiMountDisplayId(sourcenode, GetTeam(), npc == NULL || sourcenode == 315);
     if ((mount_display_id == 0 && spellid == 0) || sourcepath == 0)
     {
         GetSession()->SendActivateTaxiReply(ERR_TAXIUNSPECIFIEDSERVERERROR);

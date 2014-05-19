@@ -809,7 +809,6 @@ SpellInfo::SpellInfo(SpellEntry const* spellEntry)
     ManaPerSecond = spellEntry->manaPerSecond;
     ManaPerSecondPerLevel = spellEntry->manaPerSecondPerLevel;
     ManaCostPercentage = spellEntry->ManaCostPercentage;
-    RuneCostID = spellEntry->runeCostID;
     RangeEntry = spellEntry->rangeIndex ? sSpellRangeStore.LookupEntry(spellEntry->rangeIndex) : NULL;
     Speed = spellEntry->speed;
     StackAmount = spellEntry->StackAmount;
